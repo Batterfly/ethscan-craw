@@ -1,5 +1,7 @@
 package com.lrelia.crawler.controller;
 
+import com.lrelia.crawler.Init.CoinMarketInit;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,8 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class IndexController {
+    @Autowired
+    CoinMarketInit coinMarketInit;
+
     @GetMapping(value = "")
     public String toBotList() {
+        coinMarketInit.initSymbol();
         return "index";
     }
 }
