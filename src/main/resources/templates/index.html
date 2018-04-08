@@ -1,10 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.min.css" rel="stylesheet">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
 </head>
-<body>aasdasdasd
+<style>
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    @media (min-width: 768px) {
+        .container {
+            width: 750px;
+        }
+    }
+    @media (min-width: 992px) {
+        .container {
+            width: 970px;
+        }
+    }
+    @media (min-width: 1200px) {
+        .container {
+            width: 1170px;
+        }
+    }
+    .container-fluid {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .w100{
+        width:100px;
+        position: relative;
+    }
+    .w100 span.s1{
+        position: absolute;
+        left: 10px;
+        top: 15px;
+    }
+    .w100 span.s2{
+        position: absolute;
+        right: 15px;
+        top: 5px;
+    }
+    .w100 p{
+        width: 105px;
+        height: 1px;
+        background: darkgray;
+        -webkit-transform: rotate(22deg);
+        -moz-transform: rotate(22deg);
+        transform: rotate(22deg);
+        position: absolute;
+        left: -3px;
+        top: 18px;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <h1>etherscan钱包Token监控和统计</h1>
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="navbar-menu" class="collapse navbar-collapse">
+        </div>
+    </nav>
 
+    <div id="content" class="row-fluid">
+        <div  class="col-md-3">
+            <!--<h2>钱包地址<span id="add_num">(5)</span></h2>-->
+            <button type="button" style="visibility:hidden;" onclick="refreshAddress();" id="addressBtn">刷新</button>
+            <nav class="navbar navbar-inverse">
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">钱包地址</a></li>
+                        <li><a href="#">刷新钱包</a></li>
+                        <li><a href="#">编辑钱包</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <ul id="address" class="nav nav-tabs nav-stacked">
+
+            </ul>
+        </div>
+        <div class="col-md-2">
+            <h2>钱包币种</h2>
+            <select id="slpk" class="form-control selectpicker" title="请选择Token">
+                <option value='1' >请选择Token</option>
+                <option value='2'>香蕉</option>
+                <option value='3'>香蕉</option>
+            </select>
+        </div>
+        <div class="col-md-7">
+            <h2>数据和统计</h2>
+            <button type="button" class="btn btn-default" style="margin:10px;" onclick="calculate();" id="calculate">计算</button>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td class="w100">
+                        <span class="s1">分类</span>
+                        <p></p>
+                        <span class="s2">时间</span>
+                    </td>
+                    <td>4-9</td>
+                    <td>4-10</td>
+                    <td>4-11</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        转入
+                    </td>
+                    <td>
+                        2000
+                    </td>
+                    <td>
+                     544
+                    </td>
+                    <td>
+                        345
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        转出
+                    </td>
+                    <td>
+                        24
+                    </td>
+                    <td>
+                        23432
+                    </td>
+                    <td>
+                        2341
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+</div>
+<script src="/refresh.js"></script>
 </body>
 </html>
