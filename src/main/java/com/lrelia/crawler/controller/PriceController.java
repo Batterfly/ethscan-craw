@@ -24,7 +24,7 @@ public class PriceController {
     @GetMapping(value = "/{token_id}")
     public String price(@PathVariable String token_id) throws IOException {
 
-        logger.info("接受到查询" + token_id + "价格");
+        logger.info("query token:" + token_id + "price");
         return HttpUtil.getString(String.format(priceApi, token_id), 3, null);
 
     }

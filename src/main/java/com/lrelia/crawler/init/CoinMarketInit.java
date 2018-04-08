@@ -1,4 +1,4 @@
-package com.lrelia.crawler.Init;
+package com.lrelia.crawler.init;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -8,14 +8,10 @@ import com.lrelia.crawler.repository.CoinMarketMapRepository;
 import com.lrelia.crawler.utils.HttpUtil;
 import com.lrelia.crawler.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
