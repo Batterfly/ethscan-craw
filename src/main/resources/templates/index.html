@@ -98,15 +98,30 @@
         </div>
         <div class="col-md-2">
             <h2>钱包币种</h2>
-            <select id="slpk" class="form-control selectpicker" title="请选择Token">
-                <option value='1' >请选择Token</option>
-                <option value='2'>香蕉</option>
-                <option value='3'>香蕉</option>
+            <select id="slpk" class="form-control selectpicker" onchange="selectOnchang(this)" title="请选择Token">
+                <option value='-1' >请选择Token</option>
+
             </select>
         </div>
         <div class="col-md-7">
             <h2>数据和统计</h2>
-            <button type="button" class="btn btn-default" style="margin:10px;" onclick="calculate();" id="calculate">计算</button>
+            <!--<button type="button" class="btn btn-default" style="margin:10px;" onclick="calculate();" id="calculate">计算</button>-->
+            <table class="table table-bordered">
+                <tbody>
+                <tr style="height:80px;">
+                    <td>
+                        <div><span>价格：</span><span id="price_usd">0 </span><span>USD(</span><span id="sco" style="font-weight: bold;"><span></span><span id="percent_change_24h"></span><span></span></span>)</div>
+                        <div><span>24小时交易量：$</span><span id="24h_volume_usd">0 </span><span>USD</span></div>
+                        <div><span>流通量：</span><span id="available_supply">0 </span><span class="symbol"></span></div>
+                    </td>
+                    <td>
+                        <div><span>BTC价格：</span><span id="price_btc">0 </span></div>
+                        <div><span>市值：$</span><span id="market_cap_usd">0 </span><span> USD</span></div>
+                        <div><span>总量：</span><span id="total_supply">0 </span><span class="symbol"></span></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
             <table class="table table-bordered">
                 <thead>
