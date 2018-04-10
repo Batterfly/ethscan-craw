@@ -6,10 +6,12 @@ $(function () {
     // after();
     $("ul#address").on("click", "li", function () {      //只需要找到你点击的是哪个ul里面的就行
         $(this).addClass("active").siblings().removeClass("active");
-        var address_id = $(this).attr('id');
+        address_id = $(this).attr('id');
         getTokensByaddressId(address_id)
+        initTradeViewAndPrice()
     });
 });
+var address_id = 0;
 
 var i = 5;
 
@@ -85,7 +87,7 @@ function getTokensByaddressId(address_id) {
         dataType: "json",
         contentType: "application/json",
         success: function (result) {
-            if(result.length>0){
+            if (result.length > 0) {
                 $.each(result, function (i) {
                     $('#slpk').append("<option value=" + result[i] + ">" + result[i] + "</option>");
                 });
@@ -98,54 +100,140 @@ function getTokensByaddressId(address_id) {
 }
 
 function selectOnchang(obj) {
-    var value = obj.options[obj.selectedIndex].value;
-    getPrice(value)
-}
+    var token = obj.options[obj.selectedIndex].value;
+    getPrice(token)
 
-/**
- * 保存业务总结
- */
-function saveBusinessEvaluate() {
-    $('#business-evaluate-btn').attr('disabled', 'disabled');
-    var summaryId = $('#summaryId').val();
-    var data = [];
-    $('#business-evaluate-table').find('tbody').find('tr').each(function (index, dom) {
-        var businessEvaluate = {};
-        businessEvaluate.completeSituation = $(dom).find('.complete-situation').val();
-        var id = $(dom).find('.id').val();
-        if (id && id != '') {
-            businessEvaluate.id = id;
-        }
-        businessEvaluate.summaryDetailId = $(dom).find('.summary-detail-id').val();
-        businessEvaluate.selfEvaluate = $(dom).find('.business-self-evaluate').val();
-        var superiorEvaluate = $(dom).find('.business-superior-evaluate').val();
-        if (!superiorEvaluate || superiorEvaluate === '') {
-            businessEvaluate.superiorEvaluate = 0;
-        } else {
-            businessEvaluate.superiorEvaluate = superiorEvaluate;
-        }
-        businessEvaluate.additionalCase = $(dom).find('.additional-case').val();
-        data.push(businessEvaluate);
-    });
-    if (data.length <= 0) {
-        layer.msg('暂无评价项目', {icon: 5});
-        return;
+    initEchart(token)
+
+}
+function initTradeViewAndPrice() {
+    $(".symbol").text(0)
+    $("#price_usd").text(0)
+    $("#price_btc").text(0)
+    $("#24h_volume_usd").text(0)
+    $("#market_cap_usd").text(0)
+    $("#available_supply").text(0)
+    $("#total_supply").text(0)
+    $("#percent_change_24h").text('')
+
+
+}
+function drawView(xAxisData, seriesList) {
+    $("#timeTr").find("td").not(":first").remove();
+    $("#in").find("td").not(":first").remove();
+    $("#out").find("td").not(":first").remove();
+    xAxisData.forEach(function (date) {
+        $("#timeTr").append("<td>" + date + "</td>")
+    })
+    for (var i = 0; i < seriesList.length; i++) {
+        seriesList[i].data.forEach(function (d) {
+            debugger
+            $("#" + (i == 0 ? "in" : "out")).append("<td>" + d.toLocaleString() + "</td>")
+        })
     }
-    $.ajax({
-        url: "/year/evaluate/summary/" + summaryId + "?isSelfEvaluate=true",
-        type: "PUT",
-        cache: false,
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify(data),
-        success: function (result) {
-            layer.msg('总结评价保存成功', {icon: 1}, function () {
-                document.location.reload();
-            });
-        },
-        error: function (result) {
-            layer.msg('总结评价保存失败', {icon: 7});
-        }
-    });
+
 }
 
+function initEchart(symbol) {
+
+    var myChart = echarts.init(document.getElementById('echart'));
+    option = {
+        title: {
+            text: symbol + ' 币转入转出图'
+        },
+        tooltip: {},
+        toolbox: {
+            show: true,
+            feature: {
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data: ['转入', '转出']
+        },
+        xAxis: {
+            type: "category",
+            data: []
+        },
+        yAxis: [{
+            type: "value",
+            axisLabel: {
+                margin: 2,
+                formatter: function (value, index) {
+                    if (value >= 10000 && value < 10000000) {
+                        value = value / 10000 + "万";
+                    } else if (value >= 10000000) {
+                        value = value / 10000000 + "千万";
+                    }
+                    return value;
+                }
+            }
+        }],
+
+        series: [
+            {
+                name: "转入",
+                type: "bar",
+                data: []
+            },
+            {
+                name: "转出",
+                type: "bar",
+                data: []
+            }
+        ]
+    };
+    myChart.showLoading();
+    $.ajax({
+        type: "get",
+        async: true, //异步执行
+        url: "chart?" + "address_id=" + address_id + "&symbol=" + symbol,
+        dataType: "json", //返回数据形式为json
+        success: function (json) {
+            myChart.hideLoading();
+            myChart.setOption({
+                xAxis: {
+                    data: json.xAxisData
+                },
+                series: json.seriesList,
+            });
+            drawView(json.xAxisData, json.seriesList)
+        },
+        error: function (errorMsg) {
+        }
+    });
+    myChart.setOption(option);
+}
+
+function formatNum(str){
+    var newStr = "";
+    var count = 0;
+
+    if(str.indexOf(".")==-1){
+        for(var i=str.length-1;i>=0;i--){
+            if(count % 3 == 0 && count != 0){
+                newStr = str.charAt(i) + "," + newStr;
+            }else{
+                newStr = str.charAt(i) + newStr;
+            }
+            count++;
+        }
+        str = newStr + ".00"; //自动补小数点后两位
+        console.log(str)
+    }
+    else
+    {
+        for(var i = str.indexOf(".")-1;i>=0;i--){
+            if(count % 3 == 0 && count != 0){
+                newStr = str.charAt(i) + "," + newStr;
+            }else{
+                newStr = str.charAt(i) + newStr; //逐个字符相接起来
+            }
+            count++;
+        }
+        str = newStr + (str + "00").substr((str + "00").indexOf("."),3);
+        console.log(str)
+    }
+}

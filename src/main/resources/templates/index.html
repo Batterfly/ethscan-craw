@@ -8,6 +8,7 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.0.4/echarts-en.common.js"></script>
 </head>
 <style>
     .container {
@@ -125,48 +126,49 @@
 
             <table class="table table-bordered">
                 <thead>
-                <tr>
+                <tr id="timeTr">
                     <td class="w100">
                         <span class="s1">分类</span>
                         <p></p>
                         <span class="s2">时间</span>
                     </td>
-                    <td>4-9</td>
-                    <td>4-10</td>
-                    <td>4-11</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+                <tr id="in">
                     <td>
                         转入
                     </td>
-                    <td>
-                        2000
-                    </td>
-                    <td>
-                     544
-                    </td>
-                    <td>
-                        345
-                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
                 </tr>
-                <tr>
+                <tr id="out">
                     <td>
                         转出
                     </td>
-                    <td>
-                        24
-                    </td>
-                    <td>
-                        23432
-                    </td>
-                    <td>
-                        2341
-                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
                 </tr>
                 </tbody>
             </table>
+            <div id="echart" style="width: 600px;height:400px;"></div>
         </div>
 
     </div>
