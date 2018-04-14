@@ -2,7 +2,9 @@ package com.lrelia.crawler.schedule;
 
 import com.lrelia.crawler.async.AsyncSaveDbService;
 import com.lrelia.crawler.entity.EtherscanAddress;
+import com.lrelia.crawler.entity.TokenTransferHistory;
 import com.lrelia.crawler.repository.EtherscanAddressRepository;
+import com.lrelia.crawler.repository.TokenTransferHistoryRepository;
 import com.lrelia.crawler.thread.AltTokenCrawler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +32,20 @@ public class AltSchedule {
     @Autowired
     private EtherscanAddressRepository addressRepository;
 
+    @Autowired
+    TokenTransferHistoryRepository tokenTransferHistoryRepository;
+
     @Scheduled(cron = "0/10 * * * * *")
     public void fetchAlt() {
         exec = Executors.newFixedThreadPool(10);
         List<EtherscanAddress> addressList = addressRepository.findAll();
         for (EtherscanAddress address : addressList) {
-            exec.execute(new AltTokenCrawler(address, asyncSaveDbService));
+            TokenTransferHistory history = tokenTransferHistoryRepository.findLeastHistory(address.getId());
+            String leastTx = "null";
+            if (history != null) {
+                leastTx = history.getTxHash();
+            }
+            exec.execute(new AltTokenCrawler(leastTx, address, asyncSaveDbService));
         }
         exec.shutdown();
     }

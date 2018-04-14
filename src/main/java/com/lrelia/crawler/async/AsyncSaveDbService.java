@@ -4,6 +4,8 @@ import com.lrelia.crawler.entity.EthTransferHistory;
 import com.lrelia.crawler.entity.TokenTransferHistory;
 import com.lrelia.crawler.repository.EthTransferHistoryRepository;
 import com.lrelia.crawler.repository.TokenTransferHistoryRepository;
+import com.lrelia.crawler.thread.AltTokenCrawler;
+import com.lrelia.crawler.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.List;
 @Service
 public class AsyncSaveDbService {
 
+    private static final LogUtil logger = LogUtil.newInstance(AltTokenCrawler.class);
+
     @Autowired
     TokenTransferHistoryRepository altRepository;
 
@@ -27,6 +31,7 @@ public class AsyncSaveDbService {
 
     @Async
     public void saveTokenHistorys(List<TokenTransferHistory> tokenTransferHistorys) {
+        logger.info("保存Token数量:"+tokenTransferHistorys.size());
         if (CollectionUtils.isEmpty(tokenTransferHistorys)) {
             return;
         }

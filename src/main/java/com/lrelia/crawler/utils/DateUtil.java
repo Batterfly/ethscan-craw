@@ -56,6 +56,10 @@ public class DateUtil {
         return sdf.parse(getCurrentYear()+"-"+str);
     }
 
+    public static Date parseToDateTime(String str) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.parse(getCurrentYear()+"-"+str);
+    }
     public static String getCurrentYear(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();

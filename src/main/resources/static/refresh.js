@@ -127,7 +127,6 @@ function drawView(xAxisData, seriesList) {
     })
     for (var i = 0; i < seriesList.length; i++) {
         seriesList[i].data.forEach(function (d) {
-            debugger
             $("#" + (i == 0 ? "in" : "out")).append("<td>" + d.toLocaleString() + "</td>")
         })
     }

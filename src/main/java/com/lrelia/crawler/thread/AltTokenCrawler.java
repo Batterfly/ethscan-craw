@@ -18,6 +18,7 @@ import org.thymeleaf.util.StringUtils;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,13 +36,17 @@ public class AltTokenCrawler implements Runnable {
 
     private Connection connection;
 
-    public AltTokenCrawler(EtherscanAddress address, AsyncSaveDbService asyncSaveDbService) {
+    private String leastTxHash;
+
+    public AltTokenCrawler(String leastTx, EtherscanAddress address, AsyncSaveDbService asyncSaveDbService) {
+        this.leastTxHash = leastTx;
         this.address = address;
         this.asyncSaveDbService = asyncSaveDbService;
     }
 
     @Override
     public void run() {
+        logger.info("开始抓取:" + address.getAddress());
         EtherscanAddress etherscanAddress = address;
         String address = etherscanAddress.getAddress();
         connection = getConnection(address);
@@ -51,19 +56,14 @@ public class AltTokenCrawler implements Runnable {
             elements.remove(0);
 
             List<TokenTransferHistory> token_history = new ArrayList<>();
-            String firstTx = "";
             for (int i = 0; i < elements.size(); i++) {
                 Elements temp = elements.get(i).children();
                 String tx = temp.get(0).text();
-                if (i == 0) {
-                    firstTx = tx;
+
+                if (tx.equals(leastTxHash)) {
+                    break;
                 }
-                //cache
-                if (!StringUtils.isEmpty(TxCache.getCache(address))) {
-                    if (tx.equals(TxCache.getCache(address))) {
-                        break;
-                    }
-                }
+
                 TokenTransferHistory tokenTransferHistory = new TokenTransferHistory();
                 String time = temp.get(1).children().attr("title");
                 int type = temp.get(3).children().text().equals("OUT") ? 2 : 1;
@@ -72,8 +72,12 @@ public class AltTokenCrawler implements Runnable {
                 tokenTransferHistory.setSymbol(symbol);
                 tokenTransferHistory.setAddressId(etherscanAddress.getId());
                 tokenTransferHistory.setCount(val);
+                tokenTransferHistory.setTxHash(tx);
                 try {
-                    tokenTransferHistory.setCreateAt(DateUtil.parse(time));
+                    long forienTime = DateUtil.parse(time).getTime();
+                    Date date = new Date();
+                    date.setTime(forienTime + 3600000*8);
+                    tokenTransferHistory.setCreateAt(date);
                 } catch (ParseException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -81,8 +85,7 @@ public class AltTokenCrawler implements Runnable {
 
                 token_history.add(tokenTransferHistory);
             }
-            TxCache.setCache(address, firstTx);
-
+            logger.info(address + "抓取结束,进行异步保存！");
             asyncSaveDbService.saveTokenHistorys(token_history);
 
         } catch (Exception e) {

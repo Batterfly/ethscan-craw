@@ -20,6 +20,7 @@ public class TokenTransferHistory {
     private String symbol;
     private BigDecimal count;
     private Date createAt;
+    private String txHash;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,4 +83,13 @@ public class TokenTransferHistory {
         this.createAt = createAt;
     }
 
+    @Basic
+    @Column(name = "tx_hash", nullable = true)
+    public String getTxHash() {
+        return txHash;
+    }
+
+    public void setTxHash(String txHash) {
+        this.txHash = txHash;
+    }
 }

@@ -1,6 +1,10 @@
 package com.lrelia.crawler.schedule;
 
+import com.lrelia.crawler.repository.EtherscanAddressRepository;
+import com.lrelia.crawler.repository.TokenTransferHistoryRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,5 +14,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EtherscanSchedule {
+
+    @Autowired
+    private TokenTransferHistoryRepository tokenTransferHistoryRepository;
+
+    @Autowired
+    private EtherscanAddressRepository addressRepository;
+
+    @Scheduled(cron = "*/10 * * * * ? ")
+    public void test() {
+
+    }
+
 
 }
