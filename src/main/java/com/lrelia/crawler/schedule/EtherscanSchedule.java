@@ -52,7 +52,6 @@ public class EtherscanSchedule {
     @Scheduled(cron = "*/5 * * * * ? ")
     public void get() {
         List<EtherscanAddress> allAddress = addressRepository.findAll();
-        allAddress=Arrays.asList(allAddress.get(0));
         allAddress.stream().forEach(address -> {
             logger.info("访问API 获取:address:" + address.getAddress() + "以太转账记录开始！");
             EthTransferHistory ethTransferHistory = ethTransferHistoryRepository.findLeastEthHistory(address.getId());
