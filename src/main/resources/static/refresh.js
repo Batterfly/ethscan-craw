@@ -87,6 +87,7 @@ function getTokensByaddressId(address_id) {
         dataType: "json",
         contentType: "application/json",
         success: function (result) {
+            $('#slpk').append("<option value=" + "ethereum" + ">" + "Ethereum" + "</option>");
             if (result.length > 0) {
                 $.each(result, function (i) {
                     $('#slpk').append("<option value=" + result[i] + ">" + result[i] + "</option>");
@@ -106,6 +107,7 @@ function selectOnchang(obj) {
     initEchart(token)
 
 }
+
 function initTradeViewAndPrice() {
     $(".symbol").text(0)
     $("#price_usd").text(0)
@@ -116,8 +118,14 @@ function initTradeViewAndPrice() {
     $("#total_supply").text(0)
     $("#percent_change_24h").text('')
 
-
+    !$("#in td ").not(":first").each(function (){
+            $(this).text(0)
+    })
+    $("#out td ").not(":first").each(function (){
+            $(this).text(0)
+    })
 }
+
 function drawView(xAxisData, seriesList) {
     $("#timeTr").find("td").not(":first").remove();
     $("#in").find("td").not(":first").remove();
@@ -132,10 +140,9 @@ function drawView(xAxisData, seriesList) {
     }
 
 }
-
 function initEchart(symbol) {
 
-    var myChart = echarts.init(document.getElementById('echart'));
+     var myChart = echarts.init(document.getElementById('echart'));
     option = {
         title: {
             text: symbol + ' 币转入转出图'
@@ -206,15 +213,15 @@ function initEchart(symbol) {
     myChart.setOption(option);
 }
 
-function formatNum(str){
+function formatNum(str) {
     var newStr = "";
     var count = 0;
 
-    if(str.indexOf(".")==-1){
-        for(var i=str.length-1;i>=0;i--){
-            if(count % 3 == 0 && count != 0){
+    if (str.indexOf(".") == -1) {
+        for (var i = str.length - 1; i >= 0; i--) {
+            if (count % 3 == 0 && count != 0) {
                 newStr = str.charAt(i) + "," + newStr;
-            }else{
+            } else {
                 newStr = str.charAt(i) + newStr;
             }
             count++;
@@ -222,17 +229,16 @@ function formatNum(str){
         str = newStr + ".00"; //自动补小数点后两位
         console.log(str)
     }
-    else
-    {
-        for(var i = str.indexOf(".")-1;i>=0;i--){
-            if(count % 3 == 0 && count != 0){
+    else {
+        for (var i = str.indexOf(".") - 1; i >= 0; i--) {
+            if (count % 3 == 0 && count != 0) {
                 newStr = str.charAt(i) + "," + newStr;
-            }else{
+            } else {
                 newStr = str.charAt(i) + newStr; //逐个字符相接起来
             }
             count++;
         }
-        str = newStr + (str + "00").substr((str + "00").indexOf("."),3);
+        str = newStr + (str + "00").substr((str + "00").indexOf("."), 3);
         console.log(str)
     }
 }

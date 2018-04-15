@@ -9,6 +9,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author <a href="mailto:jiangqin@vpgame.cn">Jiangqin</a>
  * @description
@@ -24,4 +27,12 @@ public interface EthTransferHistoryRepository extends CrudRepository<EthTransfer
             "    create_at DESC " +
             "    LIMIT 1", nativeQuery = true)
     EthTransferHistory findLeastEthHistory(@Param("address_id") long addressId);
+
+
+    @Query(value = "SELECT SUM(eth_transfer_history.`count`),DATE_FORMAT( create_at, \"%Y-%m-%d\" ) FROM eth_transfer_history WHERE " +
+            " address_id =?1 AND `type`=?2  AND " +
+            "create_at BETWEEN ?3 AND ?4  " +
+            "GROUP BY DATE_FORMAT( create_at, \"%Y-%m-%d\" ) ", nativeQuery = true)
+    List<Object[]> calculateEthSumByCondition(long addressId, int type, Date startDate, Date endDate);
+
 }

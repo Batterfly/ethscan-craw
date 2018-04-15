@@ -1,6 +1,7 @@
 package com.lrelia.crawler.controller;
 
 import com.lrelia.crawler.model.EchartSeries;
+import com.lrelia.crawler.repository.EthTransferHistoryRepository;
 import com.lrelia.crawler.repository.TokenTransferHistoryRepository;
 import com.lrelia.crawler.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class EchartController {
     @Autowired
     TokenTransferHistoryRepository historyRepository;
 
+    @Autowired
+    EthTransferHistoryRepository ethTransferHistory;
+
     @GetMapping(value = "chart")
     public String getchart(@RequestParam("address_id") long addressId, @RequestParam("symbol") String symbol) throws ParseException {
 
@@ -32,11 +36,20 @@ public class EchartController {
 
         Map<String, BigDecimal> inMap = new HashMap<>();
         Map<String, BigDecimal> outMap = new HashMap<>();
+        List<Object[]> inCalate = new ArrayList<>();
+        List<Object[]> outCalate = new ArrayList<>();
+        if (symbol.equals("ethereum")) {
+            inCalate = ethTransferHistory.calculateEthSumByCondition(addressId, 1,
+                    DateUtil.parseToDateTime(xAxisData.get(0) + " 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6) + " 23:59:59"));
+            outCalate = ethTransferHistory.calculateEthSumByCondition(addressId, 2,
+                    DateUtil.parseToDateTime(xAxisData.get(0) + " 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6) + " 23:59:59"));
+        } else {
+            inCalate = historyRepository.calculateAltTokenSumByCondition(addressId, 1, symbol,
+                    DateUtil.parseToDateTime(xAxisData.get(0) + " 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6) + " 23:59:59"));
+            outCalate = historyRepository.calculateAltTokenSumByCondition(addressId, 2, symbol,
+                    DateUtil.parseToDateTime(xAxisData.get(0) + " 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6) + " 23:59:59"));
 
-        List<Object[]> inCalate = historyRepository.calculateAltTokenSumByCondition(addressId, 1, symbol,
-                DateUtil.parseToDateTime(xAxisData.get(0)+" 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6)+" 23:59:59"));
-        List<Object[]> outCalate = historyRepository.calculateAltTokenSumByCondition(addressId, 2, symbol,
-                DateUtil.parseToDateTime(xAxisData.get(0)+" 00:00:00"), DateUtil.parseToDateTime(xAxisData.get(6)+" 23:59:59"));
+        }
         inCalate.stream().forEach(obj -> inMap.put(obj[1].toString(), new BigDecimal(obj[0].toString())));
         outCalate.stream().forEach(obj -> outMap.put(obj[1].toString(), new BigDecimal(obj[0].toString())));
 
