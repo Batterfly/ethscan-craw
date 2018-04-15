@@ -68,9 +68,4 @@ public class EchartController {
         return jsonObject1.toString();
     }
 
-    public static void main(String[] args) throws ParseException {
-        List<String> xAxisData = DateUtil.getPastDateArray(6);
-        System.out.println(DateUtil.parseToDateTime(xAxisData.get(6)+" 23:59:59"));
-
-    }
 }

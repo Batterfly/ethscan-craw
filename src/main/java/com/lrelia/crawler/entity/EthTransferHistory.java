@@ -19,6 +19,8 @@ public class EthTransferHistory {
     private int type;
     private BigDecimal count;
     private Date createAt;
+    private String txHash;
+    private String blockNumber;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,5 +73,23 @@ public class EthTransferHistory {
         this.createAt = createAt;
     }
 
+    @Basic
+    @Column(name = "tx_hash", nullable = false)
+    public String getTxHash() {
+        return txHash;
+    }
 
+    public void setTxHash(String txHash) {
+        this.txHash = txHash;
+    }
+
+    @Basic
+    @Column(name = "block_number", nullable = false)
+    public String getBlockNumber() {
+        return blockNumber;
+    }
+
+    public void setBlockNumber(String blockNumber) {
+        this.blockNumber = blockNumber;
+    }
 }

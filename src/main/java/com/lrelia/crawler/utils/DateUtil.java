@@ -65,4 +65,11 @@ public class DateUtil {
         Date date = new Date();
         return sdf.format(date);
     }
+
+    public static Date parseByTimeStamp(String str) throws ParseException {
+        SimpleDateFormat format =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        Long time=new Long(str);
+        String d = format.format(time);
+        return format.parse(d);
+    }
 }
